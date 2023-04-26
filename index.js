@@ -8,7 +8,17 @@ const address = "0x63547a46CB3BbFD24adca2a13D1288F31645D0d6";
 const app = express();
 const port = 3000;
 
-app.options("*", cors());
+/* https://expressjs.com/en/resources/middleware/cors.html */
+var allowlist = ["http://localhost:4200", ""];
+var corsOptionsDelegate = function (req, callback) {
+  var corsOptions;
+  if (allowlist.indexOf(req.header("Origin")) !== -1) {
+    corsOptions = { origin: true }; // reflect (enable) the requested origin in the CORS response
+  } else {
+    corsOptions = { origin: false }; // disable CORS for this request
+  }
+  callback(null, corsOptions); // callback expects two parameters: error and options
+};
 
 app.get("/", async (req, res, next) => {
   return res.status(200).json({
@@ -17,7 +27,7 @@ app.get("/", async (req, res, next) => {
   });
 });
 
-app.get("/balances", async (req, res) => {
+app.get("/balances", cors(corsOptionsDelegate), async (req, res) => {
   try {
     const [nativeBalance, tokenBalances] = await Promise.all([
       Moralis.EvmApi.balance.getNativeBalance({
