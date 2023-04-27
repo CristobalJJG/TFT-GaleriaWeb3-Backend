@@ -4,12 +4,15 @@ const cors = require("cors");
 const Moralis = require("moralis").default;
 const { EvmChain } = require("@moralisweb3/common-evm-utils");
 
-const address = "0x63547a46CB3BbFD24adca2a13D1288F31645D0d6";
 const app = express();
 const port = 3000;
 
 /* https://expressjs.com/en/resources/middleware/cors.html */
-var allowlist = ["http://localhost:4200", ""];
+var allowlist = [
+  "http://localhost:4200",
+  "https://tft-galeria-nft-web3.vercel.app",
+  "https://tft-galeria-nft-web3-git-wallets-cristobaljjg.vercel.app",
+];
 var corsOptionsDelegate = function (req, callback) {
   var corsOptions;
   if (allowlist.indexOf(req.header("Origin")) !== -1) {
@@ -29,12 +32,9 @@ app.get("/", async (req, res, next) => {
 
 app.get("/balances", cors(corsOptionsDelegate), async (req, res) => {
   try {
-    const [nativeBalance, tokenBalances] = await Promise.all([
+    const { address } = req.query;
+    const [nativeBalance] = await Promise.all([
       Moralis.EvmApi.balance.getNativeBalance({
-        chain: EvmChain.ETHEREUM,
-        address,
-      }),
-      Moralis.EvmApi.token.getWalletTokenBalances({
         chain: EvmChain.ETHEREUM,
         address,
       }),
@@ -42,8 +42,14 @@ app.get("/balances", cors(corsOptionsDelegate), async (req, res) => {
     res.status(200).json({
       address,
       nativeBalance: nativeBalance.result.balance.ether,
-      tokenBalances: tokenBalances.result.map((token) => token.display()),
     });
+    console.log(
+      "BALANCES" +
+        "\nAddress: " +
+        address +
+        "\nBalance: " +
+        nativeBalance.result.balance.ether
+    );
   } catch (error) {
     console.error(error);
     res.status(500);
