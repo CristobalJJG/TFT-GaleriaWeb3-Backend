@@ -12,6 +12,7 @@ var allowlist = [
   "http://localhost:4200",
   "https://tft-galeria-nft-web3.vercel.app",
   "https://tft-galeria-nft-web3-git-wallets-cristobaljjg.vercel.app",
+  "https://tft-galeria-nft-web3-git-admin-cristobaljjg.vercel.app"
 ];
 var corsOptionsDelegate = function (req, callback) {
   var corsOptions;
