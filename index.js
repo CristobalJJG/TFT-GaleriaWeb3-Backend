@@ -12,15 +12,17 @@ var allowlist = [
   "http://localhost:4200",
   "https://tft-galeria-nft-web3.vercel.app",
   "https://tft-galeria-nft-web3-git-wallets-cristobaljjg.vercel.app",
-  "https://tft-galeria-nft-web3-git-admin-cristobaljjg.vercel.app"
+  "https://tft-galeria-nft-web3-git-admin-cristobaljjg.vercel.app",
+  "https://tft-galeria-nft-web3-git-fixes-cristobaljjg.vercel.app"
 ];
 var corsOptionsDelegate = function (req, callback) {
   var corsOptions;
-  if (allowlist.indexOf(req.header("Origin")) !== -1) {
-    corsOptions = { origin: true }; // reflect (enable) the requested origin in the CORS response
-  } else {
-    corsOptions = { origin: false }; // disable CORS for this request
-  }
+  if (allowlist.indexOf(req.header("Origin")) !== -1)
+    corsOptions = {
+      origin: true,
+    }; // reflect (enable) the requested origin in the CORS response
+  else corsOptions = { origin: false }; // disable CORS for this request
+
   callback(null, corsOptions); // callback expects two parameters: error and options
 };
 
